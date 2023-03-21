@@ -1,5 +1,6 @@
 package com.newTask.services;
 
+import com.newTask.entities.BuyerProducts;
 import com.newTask.entities.Products;
 import com.newTask.repo.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class SellerService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private UserLogingDetails userLogingDetails;
+    private UserLoginDetails userLogingDetails;
 
     public boolean isPresent(int id)
     {
@@ -40,7 +41,7 @@ public class SellerService {
     public Products addProduct(Products product)
     {
         String details=this.userLogingDetails.details();
-        product.setUser(details);
+        product.setSellerName(details);
         this.sellerRepository.save(product);
         return product;
     }
@@ -107,6 +108,19 @@ public class SellerService {
 
 
     public boolean isContains(List<Products> list,int id) {
+        boolean isPresent = false;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == id) {
+                isPresent = true;
+                break;
+            } else {
+                isPresent = false;
+            }
+        }
+        return isPresent;
+    }
+
+    public boolean isContainsProduct(List<BuyerProducts> list, int id) {
         boolean isPresent = false;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getId() == id) {

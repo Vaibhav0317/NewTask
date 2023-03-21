@@ -48,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
           http.authorizeHttpRequests()
                   .antMatchers(HttpMethod.GET, "/showProducts").hasRole("Buyer")
                   .antMatchers(HttpMethod.POST, "/buy").hasRole("Buyer")
+                  .antMatchers(HttpMethod.PUT, "/rating/{id}").hasRole("Buyer")
                   .antMatchers(HttpMethod.GET, "/showPurches").hasRole("Buyer")
                   .antMatchers(HttpMethod.POST, "/add").hasRole("Seller")
                   .antMatchers(HttpMethod.DELETE, "/delete/{id}").hasRole("Seller")

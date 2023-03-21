@@ -8,7 +8,9 @@ public class BuyerProducts {
     private String buyerName;
     private int buyerProductId;
     private Products buyerProduct;
-    private int buyerRating;
+    private int productRating;
+    private int sellerRating;
+
 
     public int getId() {
         return id;
@@ -42,23 +44,31 @@ public class BuyerProducts {
         this.buyerProduct = buyerProduct;
     }
 
-
-    public int getBuyerRating() {
-        return buyerRating;
+    public int getSellerRating() {
+        return sellerRating;
     }
 
-    public void setBuyerRating(int buyerRating) {
-        this.buyerRating = buyerRating;
+    public void setSellerRating(int sellerRating) {
+        this.sellerRating = sellerRating;
+    }
+
+    public int getProductRating() {
+        return productRating;
+    }
+
+    public void setProductRating(int productRating) {
+        this.productRating = productRating;
     }
 
     @Override
     public String toString() {
-        return "Buyer{" +
+        return "BuyerProducts{" +
                 "id=" + id +
                 ", buyerName='" + buyerName + '\'' +
                 ", buyerProductId=" + buyerProductId +
-                ", buyerProduct='" + buyerProduct + '\'' +
-                ", buyerRating=" + buyerRating +
+                ", buyerProduct=" + buyerProduct +
+                ", productRating=" + productRating +
+                ", sellerRating=" + sellerRating +
                 '}';
     }
 }

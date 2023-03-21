@@ -1,9 +1,10 @@
 package com.newTask.controller;
 
+import com.newTask.entities.BuyerProducts;
 import com.newTask.entities.Products;
-import com.newTask.repo.SellerRepository;
+import com.newTask.repo.BuyerRepository;
 import com.newTask.services.SellerService;
-import com.newTask.services.UserLogingDetails;
+import com.newTask.services.UserLoginDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,10 @@ public class HomeController {
     @Autowired
     private SellerService sellerService;
     @Autowired
-    private UserLogingDetails userLogingDetails;
+    private UserLoginDetails userLoginDetails;
+
+    @Autowired
+    private BuyerRepository buyerRepository;
 
     String MsgFalse = "There are no Product in your List";
     HttpStatus statusNotOk = HttpStatus.NOT_FOUND;
@@ -48,10 +52,10 @@ public class HomeController {
     @GetMapping("/show")
     public ResponseEntity<?> userProduct()
     {
-        String details=this.userLogingDetails.details();
+        String details=this.userLoginDetails.details();
         List<Products> list=this.sellerService.getAll();
 
-        list=list.stream().filter(e->e.getUser().equals(details)).collect(Collectors.toList());
+        list=list.stream().filter(e->e.getSellerName().equals(details)).collect(Collectors.toList());
        // System.out.println("Seller product >=="+list);
         if(list.size()<=0)
         {
@@ -66,10 +70,10 @@ public class HomeController {
     public ResponseEntity<?> getById(@PathVariable int id)
     {
 
-        String details=this.userLogingDetails.details();
+        String details=this.userLoginDetails.details();
         String MsgFalse = "Product Id "+id+" Not Found please enter correct Product Id";
         List<Products> list=this.sellerService.getAll();
-        list=list.stream().filter(e->e.getUser().equals(details)).collect(Collectors.toList());
+        list=list.stream().filter(e->e.getSellerName().equals(details)).collect(Collectors.toList());
         try {
             //Products p = sellerService.getById(id);
             Products p = null;
@@ -116,20 +120,20 @@ public class HomeController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable int id)
     {
-        String MsgTrue = "Task Id "+id+" Found Task Deleted Successfully";
-        String MsgFalse = "Task Id "+id+" Not Found please enter correct Task Id";
-        String details=this.userLogingDetails.details();
+        String MsgTrue = "Product Id "+id+" Found Product Deleted Successfully";
+        String MsgFalse1 = "Product Id "+id+" Not Found please enter correct Product Id";
+        String details=this.userLoginDetails.details();
         List<Products> list=this.sellerService.getAll();
-        list=list.stream().filter(e->e.getUser().equals(details)).collect(Collectors.toList());
+        list=list.stream().filter(e->e.getSellerName().equals(details)).collect(Collectors.toList());
         boolean isPresent=this.sellerService.isContains(list,id);
         if(isPresent==true)
         {
             Products product=this.sellerService.deleteProductById(id);
-            return new ResponseEntity<>(MsgFalse, statusNotOk);
+            return new ResponseEntity<>(MsgTrue, statusOk);
         }
         else
         {
-            return new ResponseEntity<>(MsgTrue, statusOk);
+            return new ResponseEntity<>(MsgFalse1, statusNotOk);
         }
     }
 
@@ -146,9 +150,9 @@ public class HomeController {
     {
         String MsgTrue = "Product Id "+id+" Found Product Update Successfully";
         String MsgFalse = "Product Id "+id+" Not Found please enter correct Product Id";
-        String details=this.userLogingDetails.details();
+        String details=this.userLoginDetails.details();
         List<Products> list=this.sellerService.getAll();
-        list=list.stream().filter(e->e.getUser().equals(details)).collect(Collectors.toList());
+        list=list.stream().filter(e->e.getSellerName().equals(details)).collect(Collectors.toList());
         boolean isPresent=this.sellerService.isContains(list,id);
         if(isPresent==true)
         {
@@ -160,6 +164,19 @@ public class HomeController {
         {
             return new ResponseEntity<>(MsgFalse, statusNotOk);
         }
+    }
+
+
+    @GetMapping("/allPurchase")
+    public ResponseEntity<?> allBuyProduct()
+    {
+        List<BuyerProducts> list=this.buyerRepository.findAll();
+        if(list.size()<=0)
+        {
+            //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return new ResponseEntity<>(MsgFalse, statusNotOk);
+        }
+        return  ResponseEntity.of(Optional.of(list));
     }
 
 }

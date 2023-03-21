@@ -9,8 +9,7 @@ public class Products {
     private String productName;
     private String productPrice;
     private String productStatus;
-    private String user;
-
+    private String sellerName;
 
     public int getId() {
         return id;
@@ -43,12 +42,9 @@ public class Products {
     public void setProductStatus(String productStatus) {
         this.productStatus = productStatus;
     }
-    public String getUser() {
-        return user;
-    }
 
-    public void setUser(String user) {
-        this.user = user;
+    public String getSellerName() {
+        return sellerName;
     }
 
     @Override
@@ -58,7 +54,13 @@ public class Products {
                 ", productName='" + productName + '\'' +
                 ", productPrice='" + productPrice + '\'' +
                 ", productStatus='" + productStatus + '\'' +
-                ", user='" + user + '\'' +
+                ", sellerName='" + sellerName + '\'' +
                 '}';
     }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+
 }
