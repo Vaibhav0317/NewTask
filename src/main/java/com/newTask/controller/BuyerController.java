@@ -8,6 +8,10 @@ import com.newTask.services.BuyerService;
 import com.newTask.services.SellerService;
 import com.newTask.services.UserLoginDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +38,9 @@ public class BuyerController {
     @Autowired
     private BuyerRepository buyerRepository;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
 
 
 
@@ -57,16 +64,31 @@ public class BuyerController {
     @PostMapping("/buy")
     public ResponseEntity<?> buyProduct(@RequestBody BuyerProducts product)
     {
+        int buyProduct=product.getPurchaseProduct();
         List<Products> list=this.sellerService.getAll();
-        boolean isPresent=this.sellerService.isContains(list,product.getBuyerProductId());
+        boolean isPresent=this.sellerService.isContains(list,product.getProductId());
         if(isPresent==true)
         {
-            Products p = this.sellerRepository.findById(product.getBuyerProductId()).get();
-            if (p.getProductStatus().equals("Available")) {
-                this.sellerRepository.deleteById(product.getBuyerProductId());
-                product.setBuyerProduct(p);
-                this.buyerService.addBuyProduct(product);
-                return new ResponseEntity<>("Product purchase Successfully", statusOk);
+            Products p = this.sellerRepository.findById(product.getProductId()).get();
+            if (p.getStatus().equals("Available")) {
+                //this.sellerRepository.deleteById(product.getBuyerProductId());
+                int updateRemainingProduct=p.getNoOfProduct()-buyProduct;
+
+                if(p.getNoOfProduct()>=buyProduct&&p.getNoOfProduct()!=0) {
+                    Query query = new Query(Criteria.where("id").is(product.getProductId()));
+                    Update update = new Update();
+                    update.set("noOfProduct", updateRemainingProduct);
+                    mongoTemplate.updateFirst(query, update, Products.class);
+
+                    product.setProductName(p.getName());
+                    product.setPrice(p.getPrice());
+                    product.setStatus(p.getStatus());
+                    this.buyerService.addBuyProduct(product);
+                    return new ResponseEntity<>("Product purchase Successfully", statusOk);
+                }
+                else {
+                    return new ResponseEntity<>("Product Not Available", statusNotOk);
+                }
             }
             else {
                 return new ResponseEntity<>("Product Currently Not Available", statusNotOk);
@@ -81,6 +103,7 @@ public class BuyerController {
     public ResponseEntity<?> showPurchesedProduct()
     {
         List<BuyerProducts> list=this.buyerService.showPurches();
+        System.out.println("list of purchase product >== "+list);
         if(list.size()<=0)
         {
             //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -102,7 +125,11 @@ public class BuyerController {
 
         if(isPresent==true)
         {
-            this.buyerService.modifyRating(product,id);
+            Query query = new Query(Criteria.where("id").is(id));
+            Update update = new Update();
+            update.set("productRating",product.getProductRating());
+            update.set("sellerRating",product.getSellerRating());
+            mongoTemplate.findAndModify(query, update, BuyerProducts.class);
             return new ResponseEntity<>(MsgTrue, statusOk);
 
         }

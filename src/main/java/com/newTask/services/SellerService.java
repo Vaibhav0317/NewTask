@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class SellerService {
@@ -21,13 +22,18 @@ public class SellerService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private UserLoginDetails userLogingDetails;
+    private UserLoginDetails userLoginDetails;
+
+    @Autowired
+    private BuyerService buyerService;
+
 
     public boolean isPresent(int id)
     {
         boolean flag=this.sellerRepository.existsById(id);
         return flag;
     }
+
 
     //get all database
     public List<Products> getAll()
@@ -40,8 +46,11 @@ public class SellerService {
     //add product in to database
     public Products addProduct(Products product)
     {
-        String details=this.userLogingDetails.details();
+        String details=this.userLoginDetails.details();
         product.setSellerName(details);
+        UUID uuid = UUID.randomUUID();
+        int positiveInt = Math.abs(uuid.hashCode());
+        product.setId(positiveInt);
         this.sellerRepository.save(product);
         return product;
     }
@@ -62,7 +71,7 @@ public class SellerService {
 
     public void deleteAllProduct()
     {
-        String details=this.userLogingDetails.details();
+        String details=this.userLoginDetails.details();
         Query query = new Query();
         query.addCriteria(Criteria.where("user").is(details));
         mongoTemplate.findAllAndRemove(query,Products.class);
@@ -77,27 +86,34 @@ public class SellerService {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
         Update update = new Update();
-        if(product.getProductName()==null)
+        if(product.getName()==null)
         {
-            update.set("productName",p.getProductName());
+            update.set("productName",p.getName());
         }
         else {
-            update.set("productName",product.getProductName());
+            update.set("productName",product.getName());
         }
-        if(product.getProductPrice()==null)
+        if(product.getPrice()==null)
         {
-            update.set("productPrice",p.getProductPrice());
+            update.set("productPrice",p.getPrice());
         }
         else {
-            update.set("productPrice",product.getProductPrice());
+            update.set("productPrice",product.getPrice());
         }
 
-        if(product.getProductStatus()==null)
+        if(product.getStatus()==null)
         {
-            update.set("productStatus",p.getProductStatus());
+            update.set("productStatus",p.getStatus());
         }
         else {
-            update.set("productStatus",product.getProductStatus());
+            update.set("productStatus",product.getStatus());
+        }
+        if(product.getNoOfProduct()==0)
+        {
+            update.set("noOfProduct",p.getNoOfProduct());
+        }
+        else {
+            update.set("noOfProduct",product.getNoOfProduct());
         }
 
         System.out.println("Updated product>=="+product);

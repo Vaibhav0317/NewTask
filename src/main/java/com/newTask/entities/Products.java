@@ -1,66 +1,27 @@
 package com.newTask.entities;
 
 
+import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Seller")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Products {
+
+   /* @Transient
+    public static final String SEQUENCE_NAME="user_sequence";
+*/
+    @Id
     private int id;
-    private String productName;
-    private String productPrice;
-    private String productStatus;
+    private String name;
+    private String price;
+    private String status;
+    private int noOfProduct;
     private String sellerName;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(String productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public String getProductStatus() {
-        return productStatus;
-    }
-
-    public void setProductStatus(String productStatus) {
-        this.productStatus = productStatus;
-    }
-
-    public String getSellerName() {
-        return sellerName;
-    }
-
-    @Override
-    public String toString() {
-        return "Products{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", productPrice='" + productPrice + '\'' +
-                ", productStatus='" + productStatus + '\'' +
-                ", sellerName='" + sellerName + '\'' +
-                '}';
-    }
-
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
-    }
-
-
 }
