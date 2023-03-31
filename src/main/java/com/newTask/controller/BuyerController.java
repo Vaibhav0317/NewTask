@@ -1,6 +1,7 @@
 package com.newTask.controller;
 
 import com.newTask.entities.BuyerProducts;
+import com.newTask.entities.FinalPurchase;
 import com.newTask.entities.Products;
 import com.newTask.repo.BuyerRepository;
 import com.newTask.repo.SellerRepository;
@@ -70,6 +71,7 @@ public class BuyerController {
         if(isPresent==true)
         {
             Products p = this.sellerRepository.findById(product.getProductId()).get();
+            System.out.println("product is avaliable >=="+p);
             if (p.getStatus().equals("Available")) {
                 //this.sellerRepository.deleteById(product.getBuyerProductId());
                 int updateRemainingProduct=p.getNoOfProduct()-buyProduct;
@@ -83,6 +85,7 @@ public class BuyerController {
                     product.setProductName(p.getName());
                     product.setPrice(p.getPrice());
                     product.setStatus(p.getStatus());
+                    product.setSellerName(p.getSellerName());
                     this.buyerService.addBuyProduct(product);
                     return new ResponseEntity<>("Product purchase Successfully", statusOk);
                 }
@@ -102,13 +105,15 @@ public class BuyerController {
     @GetMapping("/showPurches")
     public ResponseEntity<?> showPurchesedProduct()
     {
-        List<BuyerProducts> list=this.buyerService.showPurches();
+       // List<BuyerProducts> list=this.buyerService.showPurches();
+        FinalPurchase list=this.buyerService.showPurches();
+
         System.out.println("list of purchase product >== "+list);
-        if(list.size()<=0)
+        /*if(list.size()<=0)
         {
             //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             return new ResponseEntity<>(MsgFalse, statusNotOk);
-        }
+        }*/
         return  ResponseEntity.of(Optional.of(list));
     }
 

@@ -82,8 +82,59 @@ public class SellerService {
     {
 
         Products p=this.sellerRepository.findById(id).get();
+
+        Products temp=new Products();
         System.out.println("update product>=="+p);
-        Query query = new Query();
+
+        if(product.getId()==0)
+        {
+            temp.setId(p.getId());
+        }
+        else {
+            temp.setId(product.getId());
+        }
+        if(product.getName()==null)
+        {
+            temp.setName(p.getName());
+        }
+        else {
+            temp.setName(product.getName());
+        }
+        if(product.getPrice()==null)
+        {
+            temp.setPrice(p.getPrice());
+        }
+        else {
+            temp.setPrice(product.getPrice());
+        }
+
+        if(product.getStatus()==null)
+        {
+            temp.setStatus(p.getStatus());
+        }
+        else {
+            temp.setStatus(product.getStatus());
+        }
+        if(product.getNoOfProduct()==0)
+        {
+            temp.setNoOfProduct(p.getNoOfProduct());
+        }
+        else {
+            temp.setNoOfProduct(product.getNoOfProduct());
+        }
+
+        if(product.getSellerName()==null)
+        {
+            temp.setSellerName(p.getSellerName());
+        }
+        else {
+            temp.setSellerName(product.getSellerName());
+        }
+
+
+
+
+        /*Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
         Update update = new Update();
         if(product.getName()==null)
@@ -117,9 +168,11 @@ public class SellerService {
         }
 
         System.out.println("Updated product>=="+product);
-        mongoTemplate.findAndModify(query, update, Products.class);
+        mongoTemplate.findAndModify(query, update, Products.class);*/
 
-       return product;
+
+        System.out.println("Updated product>=="+temp);
+       return temp;
     }
 
 

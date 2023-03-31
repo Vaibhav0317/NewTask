@@ -3,6 +3,7 @@ package com.newTask.controller;
 import com.newTask.entities.BuyerProducts;
 import com.newTask.entities.Products;
 import com.newTask.repo.BuyerRepository;
+import com.newTask.repo.SellerRepository;
 import com.newTask.services.BuyerService;
 import com.newTask.services.SellerService;
 import com.newTask.services.UserLoginDetails;
@@ -25,6 +26,9 @@ public class HomeController {
 
     @Autowired
     private BuyerRepository buyerRepository;
+
+    @Autowired
+    private SellerRepository sellerRepository;
 
 
 
@@ -159,7 +163,8 @@ public class HomeController {
         boolean isPresent=this.sellerService.isContains(list,id);
         if(isPresent==true)
         {
-            this.sellerService.modify(product,id);
+            Products p=this.sellerService.modify(product,id);
+            this.sellerRepository.save(p);
             return new ResponseEntity<>(MsgTrue, statusOk);
 
         }
