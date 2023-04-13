@@ -73,7 +73,7 @@ public class SellerService {
     {
         String details=this.userLoginDetails.details();
         Query query = new Query();
-        query.addCriteria(Criteria.where("user").is(details));
+        query.addCriteria(Criteria.where("sellerName").is(details));
         mongoTemplate.findAllAndRemove(query,Products.class);
     }
 

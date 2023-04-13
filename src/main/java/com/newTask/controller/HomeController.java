@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -104,7 +105,7 @@ public class HomeController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody Products product)
+    public ResponseEntity<?> add(@Valid @RequestBody Products product)
     {
         String MsgTrue1 = "Product Added Successfully";
         String MsgFalse1 = "Product Id already present please use different Product id";

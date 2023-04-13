@@ -48,7 +48,7 @@ public class BuyerService {
         list=list.stream().filter(e->e.getBuyerName().equals(details)).collect(Collectors.toList());
         System.out.println("list of particular user>==="+list);
 
-        List<Products> UserList=new ArrayList<>();
+       // List<Products> UserList=new ArrayList<>();
         List<Entity> UserList1=new ArrayList<>();
 
         /*for(int i=0;i<list.size();i++)
@@ -79,7 +79,7 @@ public class BuyerService {
             UserList1.add(p);
         }
 
-        System.out.println("list of product buy by user >=="+UserList);
+        System.out.println("list of product buy by user >=="+UserList1);
         FinalPurchase finalPurchase=new FinalPurchase();
         finalPurchase.setBuyerName(details);
         finalPurchase.setPurchaseList(UserList1);

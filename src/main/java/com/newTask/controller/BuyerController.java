@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,7 +64,7 @@ public class BuyerController {
     }
 
     @PostMapping("/buy")
-    public ResponseEntity<?> buyProduct(@RequestBody BuyerProducts product)
+    public ResponseEntity<?> buyProduct(@Valid @RequestBody BuyerProducts product)
     {
         int buyProduct=product.getPurchaseProduct();
         List<Products> list=this.sellerService.getAll();
@@ -118,7 +119,7 @@ public class BuyerController {
     }
 
     @PutMapping("/rating/{id}")
-    public ResponseEntity<?> rating(@RequestBody BuyerProducts product,@PathVariable int id)
+    public ResponseEntity<?> rating(@Valid @RequestBody BuyerProducts product,@PathVariable int id)
     {
         String MsgTrue = "Product Id "+id+" Found Product Update Successfully";
         String MsgFalse = "Product Id "+id+" Not Found please enter correct Product Id";
